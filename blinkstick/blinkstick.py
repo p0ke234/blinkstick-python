@@ -350,7 +350,7 @@ class BlinkStick(object):
         try:
             if name:
                 # Special case for name="random"
-                if name == "random":
+                if name is "random":
                     red = randint(0, 255)
                     green = randint(0, 255)
                     blue = randint(0, 255)
@@ -658,7 +658,8 @@ class BlinkStick(object):
         self.turn_off()
         for x in range(repeats):
             self.morph(channel=channel, index=index, red=r, green=g, blue=b, duration=duration, steps=steps)
-            self.morph(channel=channel, index=index, red=0, green=0, blue=0, duration=duration, steps=steps)
+            time.sleep(0.02)
+            self.morph(channel=channel, index=index, name="black", duration=duration, steps=steps)
 
     def blink(self, channel=0, index=0, red=0, green=0, blue=0, name=None, hex=None, repeats=1, delay=500):
         """
@@ -684,9 +685,10 @@ class BlinkStick(object):
         for x in range(repeats):
             if x:
                 time.sleep(ms_delay)
-            self.set_color(channel=channel, index=index, red=r, green=g, blue=b)
+            self.set_led_data(channel, [g,r,b] * 32)
             time.sleep(ms_delay)
-            self.set_color(channel=channel, index=index)
+            r2, g2, b2 = 0, 0, 0
+            self.set_led_data(channel, [g2,r2,b2] * 32)
 
     def morph(self, channel=0, index=0, red=0, green=0, blue=0, name=None, hex=None, duration=1000, steps=50):
         """
@@ -730,15 +732,19 @@ class BlinkStick(object):
 
         ms_delay = float(duration) / float(1000 * steps)
 
-        self.set_color(channel=channel, index=index, red=r_start, green=g_start, blue=b_start)
-
+        #self.set_color(channel=channel, index=index, red=r_start, green=g_start, blue=b_start)
+        self.set_led_data(channel, [g_start,r_start,b_start] * 32)
         for grad in gradient:
             grad_r, grad_g, grad_b = grad
 
-            self.set_color(channel=channel, index=index, red=grad_r, green=grad_g, blue=grad_b)
+            grad_r, grad_g, grad_b = [_remap_color(val, self.max_rgb_value) for val in [grad_r, grad_g, grad_b]]       
+
+            #self.set_color(channel=channel, index=index, red=grad_r, green=grad_g, blue=grad_b)       
+            self.set_led_data(channel, [grad_g, grad_r, grad_b] * 32)
             time.sleep(ms_delay)
 
-        self.set_color(channel=channel, index=index, red=r_end, green=g_end, blue=b_end)
+        #self.set_color(channel=channel, index=index, red=r_end, green=g_end, blue=b_end)
+        self.set_led_data(channel, [g_end,r_end,b_end] * 32)
 
     def open_device(self, d):
         """Open device.
