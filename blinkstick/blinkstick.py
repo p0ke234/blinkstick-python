@@ -659,7 +659,7 @@ class BlinkStick(object):
         for x in range(repeats):
             self.morph(channel=channel, index=index, red=r, green=g, blue=b, duration=duration, steps=steps)
             time.sleep(0.02)
-            self.morph(channel=channel, index=index, name="black", duration=duration, steps=steps)
+            self.morph(channel=channel, index=index, red=0, green=0, blue=0, duration=duration, steps=steps)
 
     def blink(self, channel=0, index=0, red=0, green=0, blue=0, name=None, hex=None, repeats=1, delay=500):
         """
