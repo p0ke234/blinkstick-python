@@ -694,7 +694,7 @@ class BlinkStick(object):
         """
         Morph to the specified color.
 
-        @type  red: int
+        @type  red: int 
         @param red: Red color intensity 0 is off, 255 is full red intensity
         @type  green: int
         @param green: Green color intensity 0 is off, 255 is full green intensity
