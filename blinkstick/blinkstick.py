@@ -535,7 +535,7 @@ class BlinkStick(object):
         @return: Number of LEDs
         """
 
-        device_bytes = self._usb_ctrl_transfer(0x80 | 0x20, 0x1, 0x81, 0, 2)
+        device_bytes = self._usb_ctrl_transfer(0x80 | 0x20, 0x1, 0xA, 0, 2)
 
         if len(device_bytes) >= 2:
             return device_bytes[1]
